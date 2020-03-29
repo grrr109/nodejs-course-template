@@ -1,0 +1,33 @@
+{
+  "name": "caesar_cli",
+  "version": "1.0.0",
+  "repository": {},
+  "type": "commonjs",
+  "description": "Caesar CLI for RS School",
+  "main": "caesar_cli.js",
+  "scripts": {
+    "start": "nodemon caesar_cli.js",
+    "lint": "eslint ./ --ignore-path .gitignore --fix"
+  },
+  "keywords": [
+    "rs",
+    "school",
+    "node"
+  ],
+  "license": "ISC",
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "dependencies": {
+    "commander": "^5.0.0",
+    "through2": "^3.0.1"
+  },
+  "devDependencies": {
+    "eslint": "6.7.2",
+    "eslint-config-prettier": "6.7.0",
+    "eslint-plugin-node": "10.0.0",
+    "eslint-plugin-prettier": "3.1.1",
+    "nodemon": "2.0.2",
+    "prettier": "1.19.1"
+  }
+}
