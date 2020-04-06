@@ -1,11 +1,9 @@
 const boardsRepo = require('./board.memory.repository');
 
 const getAll = () => boardsRepo.getAll();
-const addBoard = ({ title, columns }) =>
-  boardsRepo.addBoard({ title, columns });
+const addBoard = data => boardsRepo.addBoard(data);
 const getBoardById = id => boardsRepo.getBoardById(id);
-const putBoardById = (id, { title, columns }) =>
-  boardsRepo.putBoardById(id, { title, columns });
+const putBoardById = (id, data) => boardsRepo.putBoardById(id, data);
 const deleteBoardById = id => boardsRepo.deleteBoardById(id);
 
 module.exports = {

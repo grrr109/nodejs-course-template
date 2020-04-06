@@ -36,13 +36,19 @@ describe('Tasks suite', () => {
       .post(routes.boards.create)
       .set('Accept', 'application/json')
       .send(TEST_BOARD_DATA)
-      .then(res => (testBoardId = res.body.id));
+      .then(res => {
+        console.log('boards res.body', res.body);
+        testBoardId = res.body.id;
+      });
 
     await request
       .post(routes.tasks.create(testBoardId))
       .set('Accept', 'application/json')
       .send(TEST_TASK_DATA)
-      .then(res => (testTaskId = res.body.id));
+      .then(res => {
+        console.log('tasks res.body', res.body);
+        testTaskId = res.body.id;
+      });
   });
 
   afterAll(async () => {
@@ -59,6 +65,7 @@ describe('Tasks suite', () => {
         .expect(200)
         .expect('Content-Type', /json/)
         .then(res => {
+          console.log('res all', res.body);
           debug(res.body);
           expect(res.body).to.be.an('array');
           jestExpect(res.body).not.toHaveLength(0);
@@ -73,6 +80,7 @@ describe('Tasks suite', () => {
         .get(routes.tasks.getAll(testBoardId))
         .expect(200)
         .then(res => {
+          console.log('res by id', res.body);
           jestExpect(Array.isArray(res.body)).toBe(true);
           jestExpect(res.body).not.toHaveLength(0);
           expectedTask = res.body[0];
