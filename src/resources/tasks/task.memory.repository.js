@@ -1,6 +1,6 @@
 const Task = require('./task.model');
 
-const TASKS = [
+let TASKS = [
   new Task({
     title: 'Title 1',
     order: 0,
@@ -52,9 +52,7 @@ const putTaskByBoardIdAndTaskId = (
   taskId,
   { title, order, description, userId, columnId }
 ) => {
-  const index = TASKS.filter(item => item.boardId === boardId)
-    .map(item => item.id)
-    .indexOf(taskId);
+  const index = TASKS.map(item => item.id).indexOf(taskId);
 
   if (index === -1) {
     return 'error';
@@ -74,9 +72,7 @@ const putTaskByBoardIdAndTaskId = (
 };
 
 const deleteTaskByBoardIdAndTaskId = (boardId, taskId) => {
-  const index = TASKS.filter(item => item.boardId === boardId)
-    .map(item => item.id)
-    .indexOf(taskId);
+  const index = TASKS.map(item => item.id).indexOf(taskId);
 
   if (index === -1) {
     return 'error';
@@ -87,10 +83,24 @@ const deleteTaskByBoardIdAndTaskId = (boardId, taskId) => {
   return TASKS.filter(item => item.boardId === boardId);
 };
 
+const deleteUserFromTasks = userId => {
+  TASKS.forEach(item => {
+    if (item.userId === userId) {
+      item.userId = null;
+    }
+  });
+};
+
+const deleteAllTasksByBoardId = boardId => {
+  TASKS = TASKS.map(item => item.boardId !== boardId);
+};
+
 module.exports = {
   getAllTasksByBoardId,
   addTaskByBoardId,
   getTaskByBoardIdAndTaskId,
   putTaskByBoardIdAndTaskId,
-  deleteTaskByBoardIdAndTaskId
+  deleteTaskByBoardIdAndTaskId,
+  deleteUserFromTasks,
+  deleteAllTasksByBoardId
 };

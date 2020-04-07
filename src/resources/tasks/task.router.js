@@ -13,10 +13,8 @@ router.route('/:id').get(async (req, res) => {
     req.params.id
   );
 
-  console.log('task', task);
-
   if (task) {
-    res.json(Task.toResponse(task));
+    res.json(task);
   } else {
     res
       .status(404)
@@ -58,7 +56,7 @@ router.route('/:id').put(async (req, res) => {
       .status(404)
       .json({ error: 'Cannot find task with this ID and board ID' });
   } else {
-    res.json(Task.toResponse(task));
+    res.json(task);
   }
 });
 
@@ -72,7 +70,7 @@ router.route('/').post(async (req, res) => {
     columnId: req.body.columnId
   });
 
-  res.json(Task.toResponse(task));
+  res.json(task);
 });
 
 module.exports = router;
