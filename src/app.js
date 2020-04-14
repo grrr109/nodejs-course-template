@@ -42,9 +42,10 @@ app.use('/users', userRouter);
 app.use('/boards', boardRouter);
 app.use('/boards/:boardId/tasks', taskRouter);
 
-app.use((err, req, res) => {
-  logErrors.info(`ERRORS: ${JSON.stringify(err)}`);
-  res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(`${{ error: err }}`);
+// eslint-disable-next-line
+app.use((err, req, res, next) => {
+  logErrors.error(`ERRORS: ${JSON.stringify(err.message)}`);
+  res.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ error: err.message });
 });
 
 module.exports = app;
