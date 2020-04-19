@@ -1,15 +1,51 @@
-const usersRepo = require('./user.memory.repository');
-const tasksRepo = require('../tasks/task.memory.repository');
+const User = require('./user.model');
+const Task = require('../tasks/task.model');
 
-const getAll = () => usersRepo.getAll();
-const addUser = ({ name, login, password }) =>
-  usersRepo.addUser({ name, login, password });
-const getUserById = id => usersRepo.getUserById(id);
-const putUserById = (id, { name, login, password }) =>
-  usersRepo.putUserById(id, { name, login, password });
-const deleteUserById = id => {
-  tasksRepo.deleteUserFromTasks(id);
-  return usersRepo.deleteUserById(id);
+const getAll = async () => {
+  const users = await User.userModel.find(
+    {},
+    {
+      _id: 0,
+      password: 0
+    }
+  );
+
+  return users;
+};
+
+const addUser = async ({ name, login, password }) => {
+  const user = await User.userModel.create({ name, login, password });
+
+  return user;
+};
+
+const getUserById = async id => {
+  const user = await User.userModel.findOne(
+    { id },
+    {
+      _id: 0,
+      password: 0
+    }
+  );
+
+  return user;
+};
+
+const putUserById = async (id, { name, login, password }) => {
+  const user = await User.userModel.findOneAndUpdate(
+    { id },
+    { name, login, password },
+    { new: true }
+  );
+
+  return user;
+};
+
+const deleteUserById = async id => {
+  await Task.model.updateMany({ userId: id }, { userId: null });
+  const user = await User.userModel.findOneAndDelete({ id });
+
+  return user;
 };
 
 module.exports = { getAll, addUser, getUserById, putUserById, deleteUserById };

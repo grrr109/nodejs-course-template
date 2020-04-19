@@ -1,11 +1,11 @@
 const router = require('express').Router({ mergeParams: true });
 const handleErrorAsync = require('../../middleware/error-handle');
-const Task = require('./task.model');
 const tasksService = require('./task.service');
 
 router.route('/').get(
   handleErrorAsync(async (req, res) => {
     const tasks = await tasksService.getAllTasksByBoardId(req.params.boardId);
+
     res.json(tasks);
   })
 );
@@ -29,17 +29,17 @@ router.route('/:id').get(
 
 router.route('/:id').delete(
   handleErrorAsync(async (req, res) => {
-    const tasks = await tasksService.deleteTaskByBoardIdAndTaskId(
+    const task = await tasksService.deleteTaskByBoardIdAndTaskId(
       req.params.boardId,
       req.params.id
     );
 
-    if (tasks === 'error') {
+    if (task) {
+      res.json(task);
+    } else {
       res
         .status(404)
         .json({ error: 'Cannot find task with this ID and board ID' });
-    } else {
-      res.json(tasks.map(Task.toResponse));
     }
   })
 );
@@ -71,7 +71,7 @@ router.route('/:id').put(
 
 router.route('/').post(
   handleErrorAsync(async (req, res) => {
-    const task = tasksService.addTaskByBoardId(req.params.boardId, {
+    const task = await tasksService.addTaskByBoardId(req.params.boardId, {
       title: req.body.title,
       order: req.body.order,
       description: req.body.description,

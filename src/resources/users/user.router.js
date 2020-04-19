@@ -6,8 +6,8 @@ const usersService = require('./user.service');
 router.route('/').get(
   handleErrorAsync(async (req, res) => {
     const users = await usersService.getAll();
-    // map user fields to exclude secret fields like "password"
-    res.json(users.map(User.toResponse));
+
+    res.json(users);
   })
 );
 
@@ -25,12 +25,12 @@ router.route('/:id').get(
 
 router.route('/:id').delete(
   handleErrorAsync(async (req, res) => {
-    const users = await usersService.deleteUserById(req.params.id);
+    const user = await usersService.deleteUserById(req.params.id);
 
-    if (users === 'error') {
-      res.status(404).json({ error: 'Cannot find user with this ID' });
+    if (user) {
+      res.json(user);
     } else {
-      res.json(users.map(User.toResponse));
+      res.status(404).json({ error: 'Cannot find user with this ID' });
     }
   })
 );
@@ -53,7 +53,7 @@ router.route('/:id').put(
 
 router.route('/').post(
   handleErrorAsync(async (req, res) => {
-    const user = usersService.addUser({
+    const user = await usersService.addUser({
       name: req.body.name,
       login: req.body.login,
       password: req.body.password

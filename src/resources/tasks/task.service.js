@@ -1,14 +1,36 @@
-const tasksRepo = require('./task.memory.repository');
+const Task = require('./task.model');
 
-const getAllTasksByBoardId = boardId => tasksRepo.getAllTasksByBoardId(boardId);
-const addTaskByBoardId = (boardId, data) =>
-  tasksRepo.addTaskByBoardId(boardId, data);
-const getTaskByBoardIdAndTaskId = (boardId, taskId) =>
-  tasksRepo.getTaskByBoardIdAndTaskId(boardId, taskId);
-const putTaskByBoardIdAndTaskId = (boardId, taskId, data) =>
-  tasksRepo.putTaskByBoardIdAndTaskId(boardId, taskId, data);
-const deleteTaskByBoardIdAndTaskId = (boardId, taskId) =>
-  tasksRepo.deleteTaskByBoardIdAndTaskId(boardId, taskId);
+const getAllTasksByBoardId = async boardId => {
+  const tasks = await Task.model.find({ boardId });
+
+  return tasks;
+};
+
+const addTaskByBoardId = async (boardId, data) => {
+  const task = await Task.model.create({ ...data, boardId });
+
+  return task;
+};
+const getTaskByBoardIdAndTaskId = async (boardId, taskId) => {
+  const task = await Task.model.findOne({ boardId, id: taskId });
+
+  return task;
+};
+const putTaskByBoardIdAndTaskId = async (boardId, taskId, data) => {
+  const task = await Task.model.findOneAndUpdate(
+    { boardId, id: taskId },
+    { ...data, boardId },
+    { new: true }
+  );
+
+  return task;
+};
+
+const deleteTaskByBoardIdAndTaskId = async (boardId, taskId) => {
+  const task = await Task.model.findOneAndDelete({ boardId, id: taskId });
+
+  return task;
+};
 
 module.exports = {
   getAllTasksByBoardId,

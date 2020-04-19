@@ -5,6 +5,7 @@ const boardsService = require('./board.service');
 router.route('/').get(
   handleErrorAsync(async (req, res) => {
     const boards = await boardsService.getAll();
+
     res.json(boards);
   })
 );
@@ -25,10 +26,10 @@ router.route('/:id').delete(
   handleErrorAsync(async (req, res) => {
     const boards = await boardsService.deleteBoardById(req.params.id);
 
-    if (boards === 'error') {
-      res.status(404).json({ error: 'Cannot find board with this ID' });
-    } else {
+    if (boards) {
       res.json(boards);
+    } else {
+      res.status(404).json({ error: 'Cannot find board with this ID' });
     }
   })
 );
@@ -50,7 +51,7 @@ router.route('/:id').put(
 
 router.route('/').post(
   handleErrorAsync(async (req, res) => {
-    const board = boardsService.addBoard({
+    const board = await boardsService.addBoard({
       title: req.body.title,
       columns: req.body.columns
     });
