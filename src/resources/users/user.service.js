@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const User = require('./user.model');
 const Task = require('../tasks/task.model');
 
@@ -14,7 +15,12 @@ const getAll = async () => {
 };
 
 const addUser = async ({ name, login, password }) => {
-  const user = await User.userModel.create({ name, login, password });
+  const encryptedPassword = await bcrypt.hash(password, 10);
+  const user = await User.userModel.create({
+    name,
+    login,
+    password: encryptedPassword
+  });
 
   return user;
 };
@@ -48,4 +54,17 @@ const deleteUserById = async id => {
   return user;
 };
 
-module.exports = { getAll, addUser, getUserById, putUserById, deleteUserById };
+const getUserByLogin = async login => {
+  const user = await User.userModel.findOne({ login });
+
+  return user;
+};
+
+module.exports = {
+  getAll,
+  addUser,
+  getUserById,
+  putUserById,
+  deleteUserById,
+  getUserByLogin
+};
